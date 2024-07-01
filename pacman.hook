@@ -1,0 +1,9 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = mkinitcpio
+
+[Action]
+Description = Checking if mkinitcpio's encrypt hook has changed...
+When = PostTransaction
+Exec = /bin/sh -c 'if [ "\$(cat /usr/share/mkinitcpio-encryptssh/hook.sha256)" != "\$(sha256sum < /usr/lib/initcpio/hooks/encrypt | awk \"{print \$1}\")" ] || [ "\$(cat /usr/share/mkinitcpio-encryptssh/install.sha256)" != "\$(sha256sum < /usr/lib/initcpio/install/encrypt | awk \"{print \$1}\")" ]; then echo "Warning: initcpio encrypt hook has changed - mkinitcpio-encryptssh might have to be updated"; fi'

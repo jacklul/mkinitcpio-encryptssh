@@ -1,0 +1,31 @@
+diff --git a/hooks/encrypt b/hooks/encrypt
+index aec43c5..066b6e4 100644
+--- a/hooks/encrypt
++++ b/hooks/encrypt
+@@ -88,6 +93,10 @@ EOF
+     unset OLDIFS
+ 
+     if resolved=$(resolve_device "${cryptdev}" "${rootdelay}"); then
++        echo "${resolved}" > /.cryptdev
++        echo "${cryptname}" > /.cryptname
++        echo "${cryptargs}" > /.cryptargs
++
+         if cryptsetup isLuks "${resolved}" >/dev/null 2>&1; then
+             [ "${DEPRECATED_CRYPT}" -eq 1 ] && warn_deprecated
+             dopassphrase=1
+@@ -111,9 +120,15 @@ EOF
+ 
+                     #loop until we get a real password
+                     while ! eval cryptsetup open --type luks "${resolved}" "${cryptname}" "${cryptargs}" "${CSQUIET}"; do
++                        [ -f /.done ] && break
+                         sleep 2;
+                     done
+                 fi
++
++                [ -f /.done ] && rm /.done
++                [ -f /.cryptdev ] && rm /.cryptdev
++                [ -f /.cryptname ] && rm /.cryptname
++                [ -f /.cryptargs ] && rm /.cryptargs
+             fi
+             if [ -e "/dev/mapper/${cryptname}" ]; then
+                 if [ "${DEPRECATED_CRYPT}" -eq 1 ]; then

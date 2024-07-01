@@ -1,0 +1,16 @@
+diff --git a/install/encrypt b/install/encrypt
+index 0f7530e..bb503ca 100644
+--- a/install/encrypt
++++ b/install/encrypt
+@@ -26,6 +26,11 @@ build() {
+     # cryptsetup loads the legacy provider which is required for whirlpool
+     add_binary '/usr/lib/ossl-modules/legacy.so'
+ 
++    # ssh cryptsetup shell
++    add_binary "/usr/share/mkinitcpio-encryptssh/cryptsetup_shell.sh" "/bin/cryptsetup_shell"
++    echo 'root:x:0:0:root:/root:/bin/cryptsetup_shell' > "$BUILDROOT/etc/passwd"
++    echo '/bin/cryptsetup_shell' > "$BUILDROOT/etc/shells"
++
+     add_runscript
+ }
+ 
