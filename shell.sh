@@ -2,7 +2,7 @@
 #shellcheck disable=SC2009,SC2046
 
 if [ -f "/.cryptdev" ]; then
-    if /sbin/cryptsetup luksOpen "$(cat /.cryptdev)" "$(cat /.cryptname)" $(cat /.cryptargs); then
+    if eval /sbin/cryptsetup luksOpen "$(cat /.cryptdev)" "$(cat /.cryptname)" "$(cat /.cryptargs)"; then
         touch /.done
         killall cryptsetup > /dev/null 2>&1
 
