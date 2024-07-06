@@ -17,6 +17,8 @@ md5sums=(SKIP SKIP SKIP)
 [ -f pacman.hook ] && source+=(pacman.hook) && md5sums+=(SKIP)
 
 pkgver() {
+    set -o pipefail
+    git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
 }
 
